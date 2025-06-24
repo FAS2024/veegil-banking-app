@@ -17,10 +17,16 @@ export class TransactionService {
     userId: string,
     input: CreateTransactionInput,
   ): Promise<Transaction> {
-    const user = await this.userModel.findById(userId); 
+    const user = await this.userModel.findById(userId);
 
     if (!user) {
       throw new NotFoundException('User not found');
+    }
+
+    // Validate transaction type
+    const validTypes = Object.values(TransactionType);
+    if (!validTypes.includes(input.type)) {
+      throw new BadRequestException('Invalid transaction type');
     }
 
     if (input.amount <= 0) {
@@ -35,21 +41,15 @@ export class TransactionService {
         throw new BadRequestException('Insufficient balance');
       }
 
-      // Deduct balance
       user.balance -= input.amount;
-    }
-
-    if (input.type === TransactionType.DEPOSIT) {
-      // Add to balance
+    } else if (input.type === TransactionType.DEPOSIT) {
       user.balance += input.amount;
     }
 
-    // Save updated user balance
     await user.save();
 
     input.amount = Math.round(input.amount * 100) / 100;
-    
-    // 💾 Save transaction
+
     const transaction = new this.transactionModel({
       ...input,
       userId,

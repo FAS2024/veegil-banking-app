@@ -4,6 +4,15 @@ import { getModelToken } from '@nestjs/mongoose';
 import { TransactionType } from './transaction-type.enum';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
+// ✅ Utility for mocking a user document
+const makeMockUser = (overrides = {}) => ({
+  _id: 'someUserId',
+  balance: 0,
+  withdrawalLimit: 500,
+  save: jest.fn().mockResolvedValue(true),
+  ...overrides,
+});
+
 describe('TransactionService', () => {
   let service: TransactionService;
   let userModel: any;
@@ -15,7 +24,6 @@ describe('TransactionService', () => {
       findById: jest.fn(),
     };
 
-    // 👇 Dynamic mock based on the values of the instance
     saveMock = jest.fn().mockImplementation(function () {
       return Promise.resolve({
         _id: 'txnId',
@@ -68,10 +76,9 @@ describe('TransactionService', () => {
 
   describe('createTransaction', () => {
     it('creates a transaction for valid user and amount', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', balance: 0 });
+      userModel.findById.mockResolvedValue(makeMockUser());
 
       const input = { amount: 100, type: TransactionType.DEPOSIT };
-
       const result = await service.createTransaction('someUserId', input);
 
       expect(userModel.findById).toHaveBeenCalledWith('someUserId');
@@ -91,7 +98,7 @@ describe('TransactionService', () => {
     });
 
     it('throws BadRequestException if amount is zero or negative', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', balance: 0 });
+      userModel.findById.mockResolvedValue(makeMockUser());
 
       await expect(
         service.createTransaction('someUserId', {
@@ -109,11 +116,13 @@ describe('TransactionService', () => {
     });
 
     it('throws if transaction save fails', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', balance: 0 });
-
-      saveMock.mockImplementationOnce(() => {
-        throw new Error('DB error');
-      });
+      userModel.findById.mockResolvedValue(
+        makeMockUser({
+          save: jest.fn(() => {
+            throw new Error('DB error');
+          }),
+        }),
+      );
 
       await expect(
         service.createTransaction('someUserId', {
@@ -124,7 +133,9 @@ describe('TransactionService', () => {
     });
 
     it('throws if withdrawal exceeds withdrawal limit', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', withdrawalLimit: 100, balance: 200 });
+      userModel.findById.mockResolvedValue(
+        makeMockUser({ withdrawalLimit: 100, balance: 200 }),
+      );
 
       await expect(
         service.createTransaction('someUserId', {
@@ -135,7 +146,9 @@ describe('TransactionService', () => {
     });
 
     it('throws if withdrawal exceeds balance', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', withdrawalLimit: 200, balance: 100 });
+      userModel.findById.mockResolvedValue(
+        makeMockUser({ withdrawalLimit: 200, balance: 100 }),
+      );
 
       await expect(
         service.createTransaction('someUserId', {
@@ -146,7 +159,7 @@ describe('TransactionService', () => {
     });
 
     it('throws for invalid transaction type', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId' });
+      userModel.findById.mockResolvedValue(makeMockUser());
 
       await expect(
         service.createTransaction('someUserId', {
@@ -159,7 +172,7 @@ describe('TransactionService', () => {
 
     it('handles very large transaction amounts', async () => {
       const largeAmount = Number.MAX_SAFE_INTEGER;
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', balance: 0 });
+      userModel.findById.mockResolvedValue(makeMockUser());
 
       const result = await service.createTransaction('someUserId', {
         amount: largeAmount,
@@ -170,14 +183,15 @@ describe('TransactionService', () => {
     });
 
     it('calls save once when creating a transaction', async () => {
-      userModel.findById.mockResolvedValue({ _id: 'someUserId', balance: 0 });
+      const mockUser = makeMockUser();
+      userModel.findById.mockResolvedValue(mockUser);
 
       await service.createTransaction('someUserId', {
         amount: 50,
         type: TransactionType.DEPOSIT,
       });
 
-      expect(saveMock).toHaveBeenCalledTimes(1);
+      expect(mockUser.save).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -193,16 +207,27 @@ describe('TransactionService', () => {
 
     it('returns empty array if no transactions found', async () => {
       transactionModel.exec.mockResolvedValueOnce([]);
-
       const result = await service.getUserTransactions('someUserId');
       expect(result).toEqual([]);
     });
 
     it('handles invalid user ID in getUserTransactions', async () => {
-      const invalidUserId = '';
       transactionModel.exec.mockResolvedValueOnce([]);
-      const result = await service.getUserTransactions(invalidUserId);
+      const result = await service.getUserTransactions('');
       expect(result).toEqual([]);
     });
+
+    it('throws for invalid transaction type', async () => {
+      userModel.findById.mockResolvedValue(makeMockUser());
+
+      await expect(
+        service.createTransaction('someUserId', {
+          amount: 50,
+          // @ts-ignore
+          type: 'INVALID_TYPE',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
   });
 });
