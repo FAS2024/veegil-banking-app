@@ -1,27 +1,16 @@
 {
+  "name": "veegil-fullstack-app",
+  "version": "1.0.0",
   "scripts": {
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "build": "nest build",
-    "test": "jest",
-    "lint": "eslint . --ext .ts"
+    "heroku-postbuild": "cd frontend && npm install && npm run build",
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd frontend && npm run start",
+    "start:backend": "cd backend && npm install && npm run start:prod"
   },
   "dependencies": {
-    "@nestjs/apollo": "^13.1.0",
-    "@nestjs/graphql": "^13.1.0",
-    "@nestjs/jwt": "^11.0.0",
-    "@nestjs/mongoose": "^11.0.3",
-    "@nestjs/passport": "^11.0.5",
-    "apollo-server-express": "^3.13.0",
-    "bcryptjs": "^3.0.2",
-    "dotenv": "^16.5.0",
-    "graphql": "^16.11.0",
-    "mongoose": "^8.16.0",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
+    "concurrently": "^7.6.0"
   },
-  "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/passport-jwt": "^4.0.1"
+  "engines": {
+    "node": "18.x"
   }
 }

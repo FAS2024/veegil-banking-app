@@ -6,6 +6,10 @@
 
 ---
 
+> 🔒 **Disclaimer**: This project is intended solely for assessment by Veegil Technologies. 
+> Unauthorized use, reproduction, or distribution is strictly prohibited.
+
+
 ## 🧱 Tech Stack
 
 ### 🔙 Backend
