@@ -19,8 +19,8 @@
 
 Use the following test account credentials (already seeded in the database):
 
-Phone Number: 07066623544
-Password: securePass123
+Phone Number: 07033334444
+Password: password321
 
 ===============================================================================================================
 
@@ -37,6 +37,8 @@ Password: securePass123
   [https://veegil-banking-app.herokuapp.com/graphql](https://veegil-banking-app.herokuapp.com/graphql)
 
 ---
+
+===============================================================================================================
 
 ## 🧪 How to Test the App
 
@@ -91,7 +93,7 @@ Tests:       51 passed, 51 total
 ===============================================================================================================
 
 🔍 Sample GraphQL Queries
-
+🔑 Login
 
 mutation {
   login(input: {

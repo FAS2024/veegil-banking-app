@@ -1,13 +1,4 @@
-
-
-## 🧾 Backend - README.md
-
 # 🔙 veegil-banking-app - Backend
-
-This is the **NestJS** GraphQL backend API for the `veegil-banking-app`. It handles authentication, transaction management, and user data storage securely using JWT and MongoDB.
-
----
-# 🔧 veegil-banking-app – Backend (NestJS + GraphQL)
 
 This is the backend API for the Veegil Banking App. It is built with **NestJS**, **GraphQL**, **MongoDB**, and **JWT** authentication to manage secure banking transactions and user operations.
 
@@ -20,21 +11,24 @@ This is the backend API for the Veegil Banking App. It is built with **NestJS**,
 ```bash
 cd backend
 npm install
+
+=========================================================================================================================
 Create a .env file using the template below:
 
-env
-Copy
-Edit
 MONGO_URI=mongodb://localhost:27017/veegil-banking
 JWT_SECRET=your_jwt_secret_here
+
+
+=========================================================================================================================
 Start the development server:
 
-bash
-Copy
-Edit
+
 npm run start:dev
 Access GraphQL playground at:
 🔗 http://localhost:4000/graphql
+
+
+=========================================================================================================================
 
 📁 Structure
 bash
@@ -56,6 +50,10 @@ backend/
 ├── nest-cli.json
 ├── README.md
 └── test/                     # Unit test files
+
+
+
+=========================================================================================================================
 ✨ Features
 ✅ User signup/login with JWT
 
@@ -71,26 +69,27 @@ backend/
 
 📄 Well-structured modules
 
+
+=========================================================================================================================
+
 🧪 Testing
 To run tests with coverage:
 
-bash
-Copy
-Edit
 npm run test:cov
+
+
 Expected output includes:
 
-yaml
-Copy
-Edit
 All files                     |   74.24 |       96 |   46.34 |   73.52 |
 Test Suites: 5 passed, 5 total
 Tests:       51 passed, 51 total
+
+
+=========================================================================================================================
 🔍 Sample GraphQL
+
 🔑 Login
-graphql
-Copy
-Edit
+
 mutation {
   login(input: {
     phoneNumber: "07066623544",
@@ -103,12 +102,10 @@ mutation {
     }
   }
 }
+
 🙋‍♂️ whoAmI
 Requires Authorization: Bearer <token>
 
-graphql
-Copy
-Edit
 query {
   whoAmI {
     fullName
@@ -116,17 +113,18 @@ query {
     balance
   }
 }
-👤 Author
-Fatai Sunmonu
-GitHub: @FAS2024
 
-📄 License
-MIT License
 
-yaml
-Copy
-Edit
+===============================================================================================================
 
----
+## 👨‍💻 Author
 
-Let me know if you want `.env.example` or seed scripts next!
+**Fatai Sunmonu**  
+- GitHub: [@FAS2024](https://github.com/FAS2024)  
+- LinkedIn: [linkedin.com/in/fatai-sunmonu](https://linkedin.com/in/fatai-sunmonu)
+
+===============================================================================================================
+## 📄 License
+
+This project is licensed under the [MIT License](https://opensource.org/license/MIT).
+
