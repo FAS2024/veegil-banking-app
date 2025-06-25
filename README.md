@@ -2,131 +2,97 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**veegil-banking-app** is a full-stack digital banking solution built with **NestJS**, **GraphQL**, and **MongoDB** on the backend, and **React** on the frontend. It allows users to securely sign up, log in, view balance, deposit, withdraw, and review their transaction history.
+**veegil-banking-app** is a full-stack digital banking solution developed using **NestJS** (with GraphQL) and **React**, built for the Veegil Technologies Fullstack Developer Assessment. The app enables users to sign up, log in, deposit, withdraw, and view transaction history — all within a secure, token-based environment.
+
+> 🔒 **Disclaimer**: This project is intended solely for assessment by Veegil Technologies.  
+> Unauthorized reproduction or distribution is strictly prohibited.
+
+===============================================================================================================
+
+## 🧾 Full Name (as on Indeed)
+
+**Fatai Sunmonu**
+
+===============================================================================================================
+
+## 🔐 Login Guide
+
+Use the following test account credentials (already seeded in the database):
+
+Phone Number: 07066623544
+Password: securePass123
+
+===============================================================================================================
+
+> You can log in through the web interface or directly via GraphQL Playground.
 
 ---
 
-> 🔒 **Disclaimer**: This project is intended solely for assessment by Veegil Technologies. 
-> Unauthorized use, reproduction, or distribution is strictly prohibited.
+## 🚀 Hosted Application Link
 
+- 🌍 **Live Fullstack App (Frontend + Backend on one Heroku app)**  
+  [https://veegil-banking-app.herokuapp.com](https://veegil-banking-app.herokuapp.com)
 
-## 🧱 Tech Stack
-
-### 🔙 Backend
-
-- [NestJS](https://nestjs.com/) – Node.js framework
-- [GraphQL (Apollo Server)](https://www.apollographql.com/docs/apollo-server/)
-- [MongoDB + Mongoose](https://mongoosejs.com/)
-- [Passport.js + JWT](http://www.passportjs.org/)
-
-### 🔜 Frontend
-
-- [React](https://reactjs.org/)
-- [Apollo Client](https://www.apollographql.com/docs/react/)
-- [Tailwind CSS](https://tailwindcss.com/) *(optional)*
+- ⚙️ **GraphQL Playground**  
+  [https://veegil-banking-app.herokuapp.com/graphql](https://veegil-banking-app.herokuapp.com/graphql)
 
 ---
 
-## ✨ Features
+## 🧪 How to Test the App
 
-- 🔐 JWT-based user authentication
-- 🧾 User signup, login, and secure query access
-- 👤 `whoAmI` query for current user info
-- 💸 Deposit and Withdraw transactions
-- 💰 Real-time balance display
-- 📜 Transaction history (sorted and styled)
-- 💾 MongoDB for data persistence
-- 🧪 Unit tests with Jest
-- 💡 Clean modular code architecture
+### ✅ Option 1: Online (Recommended)
 
----
+1. Visit: [https://veegil-banking-app.herokuapp.com](https://veegil-banking-app.herokuapp.com)
+2. Log in with the test credentials above
+3. Use the UI to:
+   - View current balance
+   - Make deposits and withdrawals
+   - View full transaction history
 
-## 📁 Project Structure
-
-veegil-banking-app/
-├── backend/
-│ ├── src/
-│ │ ├── auth/
-│ │ ├── user/
-│ │ ├── transaction/
-│ │ └── main.ts
-│ ├── .env.example
-│ └── package.json
-│
-├── frontend/
-│ ├── src/
-│ │ ├── apollo/
-│ │ ├── components/
-│ │ ├── pages/
-│ │ └── App.tsx
-│ ├── .env
-│ └── package.json
-│
-└── README.md
-
-yaml
-Copy
-Edit
+> You can also use GraphQL Playground at `/graphql` with Bearer token authentication.
 
 ---
 
-## ⚙️ Getting Started
-
-### 🔧 Backend Setup
+### ✅ Option 2: Local Testing
 
 ```bash
+# Backend Setup
 cd backend
 npm install
 cp .env.example .env
-# Then set values inside .env:
+# Set values in .env:
 # MONGO_URI=mongodb://localhost:27017/veegil-banking
-# JWT_SECRET=your_secret_here
+# JWT_SECRET=yourSecretKey
 npm run start:dev
-🖥 Frontend Setup
-bash
-Copy
-Edit
+
+# Frontend Setup
 cd frontend
 npm install
 npm start
-Make sure your Apollo Client endpoint is set to:
 
-bash
-Copy
-Edit
+===============================================================================================================
+
+Ensure your frontend GraphQL endpoint is set to:
+
 http://localhost:4000/graphql
-✅ Tests
-To run all unit tests with coverage:
 
-bash
-Copy
-Edit
+===============================================================================================================
+🧪 Running Backend Tests
+
 cd backend
 npm run test:cov
-📊 Sample Output
-bash
-Copy
-Edit
- PASS  src/transaction/transaction.service.spec.ts
- PASS  src/auth/strategies/jwt.strategy.spec.ts
- PASS  src/app.controller.spec.ts
- PASS  src/user/user.resolver.spec.ts
- PASS  src/user/user.service.spec.ts
-------------------------------|---------|----------|---------|---------|-------------------
-File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
-------------------------------|---------|----------|---------|---------|-------------------
+
+Sample output:
+
 All files                     |   74.24 |       96 |   46.34 |   73.52 |
-...
 Test Suites: 5 passed, 5 total  
 Tests:       51 passed, 51 total  
-Snapshots:   0 total  
-Time:        82.333 s  
-Ran all test suites.
+
+===============================================================================================================
+
 🔍 Sample GraphQL Queries
-🔑 Login
-graphql
-Copy
-Edit
+
+
 mutation {
   login(input: {
     phoneNumber: "07066623544",
@@ -140,18 +106,14 @@ mutation {
     }
   }
 }
-🔐 whoAmI
+
+
+🧍‍♂️ whoAmI (Authenticated)
+
 Set header:
 
-makefile
-Copy
-Edit
 Authorization: Bearer <your_token_here>
-Then query:
 
-graphql
-Copy
-Edit
 query {
   whoAmI {
     _id
@@ -160,51 +122,136 @@ query {
     balance
   }
 }
-🧭 Roadmap
- User authentication with JWT
 
- Protected GraphQL route (whoAmI)
+===============================================================================================================
+🧱 Tech Stack
+Backend
+NestJS (Node.js)
 
- Transactions & Wallet logic
+GraphQL (Apollo Server)
 
- Transaction history + balance display
+MongoDB + Mongoose
 
- Role-based permissions (optional)
-
- Admin dashboard (optional)
-
- Email verification & password reset (optional)
-
- Docker & CI/CD setup (optional)
-
- 75%+ Test Coverage
-
-🧪 Developer Notes
-Use Altair, Insomnia, or GraphQL Playground to test queries.
-
-Always round amount values:
-Math.round(amount * 100) / 100
-
-Use GqlAuthGuard on all protected routes.
-
-Never return passwords in GraphQL responses.
-
-👨‍💻 Author
-Fatai Sunmonu
-GitHub: @FAS2024
-LinkedIn: linkedin.com/in/fatai-sunmonu
-
-📄 License
-Licensed under the MIT License.
-
-vbnet
-Copy
-Edit
-
-Let me know if you’d like help creating a badge for test coverage or auto-generating a table of contents.
+Passport.js + JWT
 
 
+Frontend
+React
+
+Apollo Client
+
+Tailwind CSS (optional)
+
+===============================================================================================================
+
+✨ Features
+🔐 JWT-based Authentication
+
+📱 Phone Number = Account Number
+
+💸 Deposit and Withdraw Funds
+
+🧾 Transaction History
+
+💰 Real-Time Balance Display
+
+📊 Seeded Data for Evaluation
+
+🧪 70%+ Test Coverage (Jest)
 
 
+===============================================================================================================
 
+📁 Final Project Structure
+
+veegil-banking-app/
+├── backend/
+│   ├── src/
+│   │   ├── auth/
+│   │   ├── user/
+│   │   ├── transaction/
+│   │   ├── app.controller.ts
+│   │   ├── app.controller.spec.ts
+│   │   ├── app.module.ts
+│   │   ├── app.service.ts
+│   │   ├── schema.jql
+│   │   └── main.ts
+│   ├── test/
+│   ├── coverage/
+│   ├── dist/
+│   ├── seed.ts
+│   ├── nest-cli.json
+│   ├── tsconfig.build.json
+│   ├── tsconfig.json
+│   ├── .gitignore
+│   ├── .prettierrc
+│   ├── eslint.config.mjs
+│   ├── package.json
+│   ├── package-lock.json
+│   └── README.md
+│
+├── frontend/
+│   ├── src/
+│   │   ├── apollo/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── graphql/
+│   │   ├── apolloClient.ts
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   ├── App.test.tsx
+│   │   ├── index.tsx
+│   │   ├── index.css
+│   │   ├── logo.svg
+│   │   ├── react-app-env.d.ts
+│   │   ├── reportWebVitals.ts
+│   │   └── setupTests.ts
+│   ├── public/
+│   ├── build/
+│   ├── build.json
+│   ├── .gitignore
+│   ├── tsconfig.json
+│   ├── package.json
+│   ├── package-lock.json
+│   └── README.md
+│
+├── Procfile
+├── LICENSE
+├── .gitignore
+└── README.md
+
+===============================================================================================================
+
+🧠 Developer Notes
+Use GqlAuthGuard to secure routes
+
+Always round amounts:
+
+Math.round(amount * 100) / 100;
+Use GraphQL Playground or Postman for manual testing
+
+Do not expose passwords in any API response
+
+===============================================================================================================
+
+📬 Submission Checklist
+✅ Add hr@veegil.com as a developer on the private GitLab repo (not via a group)
+✅ Include this README.md in the root of the parent folder
+✅ Include login credentials (see above)
+✅ Include link to hosted Heroku app (see above)
+✅ Hosted app tested on a second device (outside dev machine)
+✅ Code is organized into backend and frontend folders inside one parent project folder
+
+===============================================================================================================
+
+## 👨‍💻 Author
+
+**Fatai Sunmonu**  
+- GitHub: [@FAS2024](https://github.com/FAS2024)  
+- LinkedIn: [linkedin.com/in/fatai-sunmonu](https://linkedin.com/in/fatai-sunmonu)
+
+===============================================================================================================
+## 📄 License
+
+This project is licensed under the [MIT License](https://opensource.org/license/MIT).
 
