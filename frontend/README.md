@@ -1,5 +1,3 @@
----
-## 🧾 Frontend - README.md
 
 # 📲 veegil-banking-app - Frontend
 
@@ -7,67 +5,101 @@ This is the **React** frontend for the `veegil-banking-app`, a full-stack digita
 
 ---
 
-## 🔧 Tech Stack
 
-- React
-- TypeScript
-- Apollo Client
-- GraphQL
-- Tailwind CSS *(optional)*
+Certainly! Here is the standalone frontend README.md for your project:
+
+markdown
+Copy
+Edit
+# 🖥️ veegil-banking-app – Frontend (React)
+
+This is the frontend of the Veegil Banking App, built with **React**, **Apollo Client**, and **Tailwind CSS**. It connects to a NestJS GraphQL backend to allow users to sign up, log in, view balances, deposit, withdraw, and track their transaction history.
 
 ---
 
-## 🚀 Getting Started
+## 🔧 Local Setup
 
-### Prerequisites
-- Node.js >= 14
-- Backend GraphQL API running at `http://localhost:3000/graphql`
+1. Navigate into the frontend folder:
 
-### Installation
 ```bash
 cd frontend
 npm install
-```
+Create a .env file using the example below:
 
-### Start the app
-```bash
+env
+Copy
+Edit
+REACT_APP_GRAPHQL_ENDPOINT=http://localhost:4000/graphql
+Start the React app:
+
+bash
+Copy
+Edit
 npm start
-```
+Ensure the backend server is already running on port 4000.
 
----
+🌐 Hosted App
+The full app is deployed to:
+🔗 https://veegil-banking-app.herokuapp.com
 
-## 📁 Folder Structure
-```
+📁 Structure
+bash
+Copy
+Edit
 frontend/
 ├── src/
-│   ├── apollo/         # Apollo Client setup
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Page-level components (e.g. Signup, Login, Transaction)
-│   ├── App.tsx         # Routing and layout
-├── .env                # Environment config (API endpoint)
+│   ├── apollo/              # Apollo client setup
+│   ├── components/          # Reusable components
+│   ├── context/             # Auth context
+│   ├── graphql/             # Queries and mutations
+│   ├── App.tsx              # Main app component
+│   ├── App.test.tsx         # React test file
+│   ├── index.tsx            # Entry point
+│   └── ...
+├── public/
+├── .env                     # Local environment config (ignored)
 ├── package.json
-```
+├── tsconfig.json
+└── README.md
+✨ Features
+🔐 User login via JWT
+
+📲 Real-time balance updates
+
+💸 Deposit & withdrawal forms
+
+📜 Transaction history display
+
+🔁 State managed via React Context and Apollo
+
+⚛️ Clean component-based structure
+
+🧪 Testing
+bash
+Copy
+Edit
+npm test
+Runs all React unit tests.
+
+👤 Author
+Fatai Sunmonu
+GitHub: @FAS2024
+
+📄 License
+MIT License
+
+yaml
+Copy
+Edit
 
 ---
 
-## ✅ Features
+Let me know when you want the backend README next!
 
-- Signup and login using phone number & password
-- Make deposits or withdrawals
-- View current balance (live update)
-- View transaction history (styled)
-- Apollo Client + GraphQL integration
 
----
 
-## 🔐 Auth Headers
-All authenticated requests automatically attach JWT via Apollo Link.
 
----
 
-## 👨‍💻 Developer
-Fatai Sunmonu  
-GitHub: https://github.com/FAS2024  
 
----
+
 

@@ -1,6 +1,4 @@
-# --------------------
-# Global
-# --------------------
+# Global ignores
 .DS_Store
 Thumbs.db
 *.log
@@ -9,47 +7,32 @@ Thumbs.db
 *.swp
 *.swo
 
-# --------------------
-# Node Modules
-# --------------------
+# Node modules and build output
 node_modules/
-
-# --------------------
-# 🛠 Build / Output
-# --------------------
 dist/
 build/
 coverage/
 
-# --------------------
-# IDE Config Files
-# --------------------
+# IDE/editor folders
 .vscode/
 .idea/
 
-# --------------------
-# Backend
-# --------------------
+# Backend folder ignores
 backend/node_modules/
 backend/dist/
+backend/build/
 backend/coverage/
 backend/.env
 backend/src/schema.gql
-backend/*.log
 
-# --------------------
-# Frontend
-# --------------------
+# Frontend folder ignores
 frontend/node_modules/
 frontend/build/
 frontend/.env
 frontend/.next/
 frontend/.turbo/
-frontend/*.log
 
-# --------------------
-# Logs (Any Level)
-# --------------------
+# Package manager logs
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
