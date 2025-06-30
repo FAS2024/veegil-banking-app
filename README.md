@@ -19,8 +19,8 @@
 
 Use the following test account credentials (already seeded in the database):
 
-Phone Number: 09090909090 
-Password: 909090
+Phone Number: 07070707070
+Password: 707070
 
 ===============================================================================================================
 
@@ -28,15 +28,19 @@ Password: 909090
 
 ---
 
+
+Local
+🔗 http://localhost:4000/graphql
+
+🔗 http://localhost:3000/
+
+
 ## 🚀 Hosted Application Link
 
-- 🌍 **Live Fullstack App (Frontend + Backend on one Heroku app)**  
-  [https://veegil-banking-app.herokuapp.com](https://veegil-banking-app.herokuapp.com)
+http://18.233.7.185:4000/graphql
 
-- ⚙️ **GraphQL Playground**  
-  [https://veegil-banking-app.herokuapp.com/graphql](https://veegil-banking-app.herokuapp.com/graphql)
+http://18.233.7.185:3000/
 
----
 
 ===============================================================================================================
 
@@ -44,7 +48,7 @@ Password: 909090
 
 ### ✅ Option 1: Online (Recommended)
 
-1. Visit: [https://veegil-banking-app.herokuapp.com](https://veegil-banking-app.herokuapp.com)  
+1. Visit: http://18.233.7.185:3000/
 2. Log in with the test credentials above  
 3. Use the UI to:  
    - View current balance  
