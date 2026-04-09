@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 dotenv.config();
 
@@ -22,26 +23,38 @@ async function bootstrap() {
   app.use(helmet());
   app.use(morgan(isProduction ? 'combined' : 'dev'));
 
+  const corsOrigin: CorsOptions['origin'] = (origin, callback) => {
+    // Allow non-browser requests (like server-to-server/health checks)
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    if (isProduction) {
+      callback(
+        origin === frontendUrl ? null : new Error('Not allowed by CORS'),
+        origin === frontendUrl,
+      );
+      return;
+    }
+
+    // In local development, allow localhost on any port (Vite may choose 5173/5174/5175...)
+    const isLocalhost = /^https?:\/\/localhost:\d+$/.test(origin);
+    const allowed = isLocalhost || origin === frontendUrl;
+    callback(allowed ? null : new Error('Not allowed by CORS'), allowed);
+  };
+
   app.enableCors({
-    origin: (origin, callback) => {
-      // Allow non-browser requests (like server-to-server/health checks)
-      if (!origin) return callback(null, true);
-
-      if (isProduction) {
-        return callback(origin === frontendUrl ? null : new Error('Not allowed by CORS'), origin === frontendUrl);
-      }
-
-      // In local development, allow localhost on any port (Vite may choose 5173/5174/5175...)
-      const isLocalhost = /^https?:\/\/localhost:\d+$/.test(origin);
-      const allowed = isLocalhost || origin === frontendUrl;
-      return callback(allowed ? null : new Error('Not allowed by CORS'), allowed);
-    },
+    origin: corsOrigin,
     credentials: true,
   });
 
-  const PORT = process.env.PORT || 4000;
-  await app.listen(PORT, '0.0.0.0');
-  console.log(`🚀 Server is running on port ${PORT}`);
-}
-bootstrap();
+  const environment = process.env.NODE_ENV || 'development';
+  const port = Number(process.env.PORT || 4000);
 
+  await app.listen(port, '0.0.0.0');
+  console.log(`🚀 Backend running in ${environment}:${port}`);
+  console.log(`🔎 GraphQL endpoint: http://localhost:${port}/graphql`);
+  console.log(`❤️ Health endpoint: http://localhost:${port}/health`);
+}
+void bootstrap();

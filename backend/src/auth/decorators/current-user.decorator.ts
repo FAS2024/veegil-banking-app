@@ -1,11 +1,16 @@
-
-// -------------------- src/auth/decorators/current-user.decorator.ts --------------------
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
+type GraphqlRequestContext = {
+  req?: {
+    user?: unknown;
+  };
+};
+
 export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
+  (_data: unknown, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req.user;
+    const gqlContext = ctx.getContext<GraphqlRequestContext>();
+    return gqlContext.req?.user;
   },
 );

@@ -123,7 +123,9 @@ describe('UserResolver & UserService', () => {
     });
 
     it('signup throws ConflictException when user exists', async () => {
-      jest.spyOn(service, 'signup').mockRejectedValue(new ConflictException('User already exists'));
+      jest
+        .spyOn(service, 'signup')
+        .mockRejectedValue(new ConflictException('User already exists'));
       const input: CreateUserInput = {
         fullName: 'Test User',
         phoneNumber: '08012345678',
@@ -154,18 +156,25 @@ describe('UserResolver & UserService', () => {
 
       const result = await resolver.login(input);
 
-      expect(service.login).toHaveBeenCalledWith(input.phoneNumber, input.password);
+      expect(service.login).toHaveBeenCalledWith(
+        input.phoneNumber,
+        input.password,
+      );
       expect(result).toEqual(loginResponse);
     });
 
     it('login throws UnauthorizedException on invalid credentials', async () => {
-      jest.spyOn(service, 'login').mockRejectedValue(new UnauthorizedException('Invalid credentials'));
+      jest
+        .spyOn(service, 'login')
+        .mockRejectedValue(new UnauthorizedException('Invalid credentials'));
       const input: LoginUserInput = {
         phoneNumber: '08012345678',
         password: 'wrongPass',
       };
 
-      await expect(resolver.login(input)).rejects.toThrow(UnauthorizedException);
+      await expect(resolver.login(input)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -203,9 +212,14 @@ describe('UserResolver & UserService', () => {
 
       const result = await service.signup(input);
 
-      expect(mockUserModel.findOne).toHaveBeenCalledWith({ phoneNumber: input.phoneNumber });
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        phoneNumber: input.phoneNumber,
+      });
       expect(bcrypt.hash).toHaveBeenCalledWith(input.password, 10);
-      expect(jwtService.sign).toHaveBeenCalledWith({ sub: 'newUserId', phoneNumber: input.phoneNumber });
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        sub: 'newUserId',
+        phoneNumber: input.phoneNumber,
+      });
       expect(result).toMatchObject({
         token: 'signed-token',
         user: expect.objectContaining({
@@ -219,11 +233,13 @@ describe('UserResolver & UserService', () => {
     it('signup throws ConflictException if user already exists', async () => {
       mockUserModel.findOne.mockResolvedValue(existingUser);
 
-      await expect(service.signup({
-        fullName: 'Existing User',
-        phoneNumber: existingUser.phoneNumber,
-        password: 'password123',
-      })).rejects.toThrow(ConflictException);
+      await expect(
+        service.signup({
+          fullName: 'Existing User',
+          phoneNumber: existingUser.phoneNumber,
+          password: 'password123',
+        }),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('login returns LoginResponse on success', async () => {
@@ -235,11 +251,22 @@ describe('UserResolver & UserService', () => {
 
       jwtService.sign.mockReturnValue('signed-token');
 
-      const result = await service.login(existingUser.phoneNumber, 'password123');
+      const result = await service.login(
+        existingUser.phoneNumber,
+        'password123',
+      );
 
-      expect(mockUserModel.findOne).toHaveBeenCalledWith({ phoneNumber: existingUser.phoneNumber });
-      expect(bcrypt.compare).toHaveBeenCalledWith('password123', existingUser.password);
-      expect(jwtService.sign).toHaveBeenCalledWith({ sub: existingUser._id, phoneNumber: existingUser.phoneNumber });
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        phoneNumber: existingUser.phoneNumber,
+      });
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        'password123',
+        existingUser.password,
+      );
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        sub: existingUser._id,
+        phoneNumber: existingUser.phoneNumber,
+      });
       expect(result.token).toBe('signed-token');
       expect(result.user.phoneNumber).toBe(existingUser.phoneNumber);
     });
@@ -249,7 +276,9 @@ describe('UserResolver & UserService', () => {
         lean: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.login('nonexistent', 'password')).rejects.toThrow(NotFoundException);
+      await expect(service.login('nonexistent', 'password')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('login throws UnauthorizedException if password invalid', async () => {
@@ -259,7 +288,9 @@ describe('UserResolver & UserService', () => {
 
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login(existingUser.phoneNumber, 'wrongPass')).rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login(existingUser.phoneNumber, 'wrongPass'),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('login throws UnauthorizedException if bcrypt.compare fails', async () => {
@@ -271,8 +302,12 @@ describe('UserResolver & UserService', () => {
         throw new Error('Compare error');
       });
 
-      await expect(service.login(existingUser.phoneNumber, 'password')).rejects.toThrow(UnauthorizedException);
-      await expect(service.login(existingUser.phoneNumber, 'password')).rejects.toThrow('Invalid credentials');
+      await expect(
+        service.login(existingUser.phoneNumber, 'password'),
+      ).rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login(existingUser.phoneNumber, 'password'),
+      ).rejects.toThrow('Invalid credentials');
     });
 
     it('findById returns user without password', async () => {
@@ -292,7 +327,9 @@ describe('UserResolver & UserService', () => {
         lean: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.findById('wrong-id')).rejects.toThrow(NotFoundException);
+      await expect(service.findById('wrong-id')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('findById throws error if model throws unexpected error', async () => {
@@ -300,7 +337,9 @@ describe('UserResolver & UserService', () => {
         lean: jest.fn().mockRejectedValue(new Error('Unexpected error')),
       });
 
-      await expect(service.findById(existingUser._id)).rejects.toThrow('Unexpected error');
+      await expect(service.findById(existingUser._id)).rejects.toThrow(
+        'Unexpected error',
+      );
     });
 
     it('signup throws error if bcrypt.hash fails', async () => {
@@ -308,11 +347,13 @@ describe('UserResolver & UserService', () => {
 
       mockUserModel.findOne.mockResolvedValue(null);
 
-      await expect(service.signup({
-        fullName: 'User',
-        phoneNumber: '08011112222',
-        password: 'password',
-      })).rejects.toThrow('Hash error');
+      await expect(
+        service.signup({
+          fullName: 'User',
+          phoneNumber: '08011112222',
+          password: 'password',
+        }),
+      ).rejects.toThrow('Hash error');
     });
 
     it('signup throws error if saving user fails', async () => {
@@ -329,11 +370,13 @@ describe('UserResolver & UserService', () => {
       };
       mockUserModel.mockImplementation(() => userInstance);
 
-      await expect(service.signup({
-        fullName: 'User',
-        phoneNumber: '08011112222',
-        password: 'password',
-      })).rejects.toThrow('Save error');
+      await expect(
+        service.signup({
+          fullName: 'User',
+          phoneNumber: '08011112222',
+          password: 'password',
+        }),
+      ).rejects.toThrow('Save error');
     });
 
     it('signup trims phoneNumber and fullName before saving', async () => {

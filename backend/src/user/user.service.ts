@@ -47,7 +47,10 @@ export class UserService {
     const payload = { sub: newUser._id, phoneNumber: newUser.phoneNumber };
     const token = this.jwtService.sign(payload);
 
-    const { password: _, ...userWithoutPassword } = newUser.toObject();
+    const userWithoutPassword = {
+      ...newUser.toObject(),
+    } as Partial<ReturnType<typeof newUser.toObject>>;
+    delete userWithoutPassword.password;
 
     return {
       token,
@@ -65,7 +68,7 @@ export class UserService {
     let isMatch: boolean;
     try {
       isMatch = await bcrypt.compare(password, user.password);
-    } catch (error) {
+    } catch {
       // Handle errors from bcrypt.compare gracefully
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -74,20 +77,24 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload: JwtPayload = { sub: user._id, phoneNumber: user.phoneNumber };
+    const payload: JwtPayload = {
+      sub: user._id,
+      phoneNumber: user.phoneNumber,
+    };
     const token = this.jwtService.sign(payload);
 
     // Remove password field before returning user
-    const { password: _, ...userWithoutPassword } = user;
+    const userWithoutPassword = { ...user } as Partial<typeof user>;
+    delete userWithoutPassword.password;
 
     return { token, user: plainToInstance(User, userWithoutPassword) };
-
   }
 
   async findById(id: string): Promise<User> {
     const user = await this.userModel.findById(id).lean();
     if (!user) throw new NotFoundException('User not found');
-    const { password, ...userWithoutPassword } = user;
+    const userWithoutPassword = { ...user } as Partial<typeof user>;
+    delete userWithoutPassword.password;
     return plainToInstance(User, userWithoutPassword);
   }
 }

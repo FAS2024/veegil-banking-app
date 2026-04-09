@@ -214,7 +214,9 @@ describe('TransactionService', () => {
     it('returns transactions sorted by createdAt descending', async () => {
       const result = await service.getUserTransactions('someUserId');
 
-      expect(transactionModel.find).toHaveBeenCalledWith({ userId: 'someUserId' });
+      expect(transactionModel.find).toHaveBeenCalledWith({
+        userId: 'someUserId',
+      });
       expect(transactionModel.sort).toHaveBeenCalledWith({ createdAt: -1 });
       expect(transactionModel.exec).toHaveBeenCalled();
       expect(Array.isArray(result)).toBe(true);
@@ -243,6 +245,5 @@ describe('TransactionService', () => {
         }),
       ).rejects.toThrow(BadRequestException);
     });
-
   });
 });

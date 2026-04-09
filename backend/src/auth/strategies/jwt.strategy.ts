@@ -25,6 +25,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: JwtPayload | null | undefined) {
+    await Promise.resolve();
+
     if (!payload || typeof payload !== 'object') {
       return {
         _id: undefined,

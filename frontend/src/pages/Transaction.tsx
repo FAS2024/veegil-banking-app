@@ -2,6 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
+type TransactionItem = {
+  _id: string;
+  amount: number;
+  type: 'DEPOSIT' | 'WITHDRAW';
+  createdAt: string;
+};
+
+type GetMeQuery = {
+  whoAmI: {
+    balance: number;
+  };
+};
+
+type GetMyTransactionsQuery = {
+  getMyTransactions: TransactionItem[];
+};
+
+type CreateTransactionMutation = {
+  createTransaction: TransactionItem;
+};
+
+type CreateTransactionVariables = {
+  input: {
+    amount: number;
+    type: 'DEPOSIT' | 'WITHDRAW';
+  };
+};
+
 const CREATE_TRANSACTION = gql`
   mutation CreateTransaction($input: CreateTransactionInput!) {
     createTransaction(input: $input) {
@@ -42,10 +70,17 @@ const Transaction = () => {
   const [transactionSuccess, setTransactionSuccess] = useState('');
   const navigate = useNavigate();
 
-  const { data: balanceData, refetch: refetchBalance } = useQuery(GET_ME);
-  const { data: transactionsData, loading: queryLoading, error } = useQuery(GET_MY_TRANSACTIONS);
+  const { data: balanceData, refetch: refetchBalance } = useQuery<GetMeQuery>(GET_ME);
+  const {
+    data: transactionsData,
+    loading: queryLoading,
+    error,
+  } = useQuery<GetMyTransactionsQuery>(GET_MY_TRANSACTIONS);
 
-  const [createTransaction, { loading: mutationLoading }] = useMutation(CREATE_TRANSACTION, {
+  const [createTransaction, { loading: mutationLoading }] = useMutation<
+    CreateTransactionMutation,
+    CreateTransactionVariables
+  >(CREATE_TRANSACTION, {
     refetchQueries: [{ query: GET_MY_TRANSACTIONS }, { query: GET_ME }],
   });
 
@@ -64,8 +99,10 @@ const Transaction = () => {
       setTransactionSuccess(`✅ ${type} of ₦${amount.toFixed(2)} was successful!`);
       setAmount(0);
       setTimeout(() => setTransactionSuccess(''), 2000);
-    } catch (err: any) {
-      alert(err?.message || 'Transaction failed');
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Transaction failed';
+      alert(errorMessage);
     }
   };
 
@@ -165,7 +202,7 @@ const Transaction = () => {
         {transactions.length === 0 && <p>No transactions yet.</p>}
 
         <ul style={styles.list}>
-          {paginatedTransactions.map((txn: any) => (
+          {paginatedTransactions.map((txn) => (
             <li
               key={txn._id}
               style={{

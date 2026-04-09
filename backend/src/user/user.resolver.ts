@@ -1,5 +1,3 @@
-
-
 // -------------------- src/user/user.resolver.ts --------------------
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
@@ -25,7 +23,6 @@ export class UserResolver {
     return this.userService.signup(input);
   }
 
-
   @Mutation(() => LoginResponse)
   async login(@Args('input') input: LoginUserInput): Promise<LoginResponse> {
     return this.userService.login(input.phoneNumber, input.password);
@@ -37,4 +34,3 @@ export class UserResolver {
     return this.userService.findById(user._id);
   }
 }
-

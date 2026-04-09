@@ -112,7 +112,7 @@ describe('JwtStrategy', () => {
       const payload = {
         sub: 'abc',
         phoneNumber: '12345',
-        email: 'test@example.com',  // extra fields should be ignored
+        email: 'test@example.com', // extra fields should be ignored
       };
 
       const result = await jwtStrategy.validate(payload);
@@ -155,7 +155,9 @@ describe('GqlAuthGuard', () => {
   // Extended tests for GqlAuthGuard
 
   it('should call super.canActivate and respect its result (true)', async () => {
-    const canActivateSpy = jest.spyOn(GqlAuthGuard.prototype as any, 'canActivate').mockResolvedValue(true);
+    const canActivateSpy = jest
+      .spyOn(GqlAuthGuard.prototype as any, 'canActivate')
+      .mockResolvedValue(true);
 
     const context = {} as ExecutionContext;
     const result = await guard.canActivate(context);
@@ -167,7 +169,9 @@ describe('GqlAuthGuard', () => {
   });
 
   it('should call super.canActivate and respect its result (false)', async () => {
-    const canActivateSpy = jest.spyOn(GqlAuthGuard.prototype as any, 'canActivate').mockResolvedValue(false);
+    const canActivateSpy = jest
+      .spyOn(GqlAuthGuard.prototype as any, 'canActivate')
+      .mockResolvedValue(false);
 
     const context = {} as ExecutionContext;
     const result = await guard.canActivate(context);
@@ -180,7 +184,9 @@ describe('GqlAuthGuard', () => {
 
   it('should throw if super.canActivate throws', async () => {
     const error = new Error('Auth error');
-    const canActivateSpy = jest.spyOn(GqlAuthGuard.prototype as any, 'canActivate').mockRejectedValue(error);
+    const canActivateSpy = jest
+      .spyOn(GqlAuthGuard.prototype as any, 'canActivate')
+      .mockRejectedValue(error);
 
     const context = {} as ExecutionContext;
 
