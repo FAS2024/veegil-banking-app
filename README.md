@@ -1,133 +1,153 @@
-# 💼 veegil-banking-app
+# veegil-banking-app
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+A full-stack digital banking demo built with NestJS, GraphQL, MongoDB, and React.  
+This project started as a technical assessment and is now maintained as a portfolio project to demonstrate production-oriented full-stack engineering skills.
 
-**veegil-banking-app** is a full-stack digital banking solution developed using **NestJS** (with GraphQL) and **React**, built for the Veegil Technologies Fullstack Developer Assessment. The app enables users to sign up, log in, deposit, withdraw, and view transaction history — all within a secure, token-based environment.
+## Why This Project
 
-> 🔒 **Disclaimer**: This project is intended solely for assessment by Veegil Technologies.  
-> Unauthorized reproduction or distribution is strictly prohibited.
+- End-to-end authentication with JWT
+- Clean GraphQL API with protected resolvers
+- Transaction workflows (deposit, withdraw, history)
+- Test coverage on backend business logic
+- CI-ready and recruiter-friendly architecture
 
-===============================================================================================================
+## Tech Stack
 
-## 🧾 Full Name (as on Indeed)
+- Backend: NestJS, GraphQL (Apollo), MongoDB (Mongoose), Passport JWT
+- Frontend: React, TypeScript, Apollo Client, React Router
+- Testing: Jest, Supertest, React Testing Library
 
-**Fatai Sunmonu**
+## Project Structure
 
-===============================================================================================================
+```text
+veegil-banking-app/
+  backend/    # NestJS + GraphQL API
+  frontend/   # React client
+```
 
-## 🔐 Login Guide
+## Local Setup
 
-Use the following test account credentials (already seeded in the database):
-
-Phone Number: 07070707070
-Password: 707070
-
-===============================================================================================================
-
-> You can log in through the web interface or directly via GraphQL Playground.
-
----
-
-
-Local
-🔗 http://localhost:4000/graphql
-
-🔗 http://localhost:3000/
-
-
-## 🚀 Hosted Application Link
-
-http://18.233.7.185:4000/graphql
-
-http://18.233.7.185:3000/
-
-
-===============================================================================================================
-
-## 🧪 How to Test the App
-
-### ✅ Option 1: Online (Recommended)
-
-1. Visit: http://18.233.7.185:3000/
-2. Log in with the test credentials above  
-3. Use the UI to:  
-   - View current balance  
-   - Make deposits and withdrawals  
-   - View full transaction history  
-
-> You can also use GraphQL Playground at `/graphql` with Bearer token authentication.
-
----
-
-### ✅ Option 2: Local Testing
+### 1) Backend
 
 ```bash
-# Backend Setup
 cd backend
 npm install
 cp .env.example .env
-# Edit .env and set values for:
-# MONGO_URI=mongodb://localhost:27017/veegil-banking
-# JWT_SECRET=yourSecretKey
-npm run start:dev
+```
 
-# Frontend Setup
-cd ../frontend
-npm install
-npm start
-===============================================================================================================
+Set environment values in `backend/.env`:
 
-Ensure your frontend GraphQL endpoint is set to:
-
-http://localhost:4000/graphql
-
-
-backend/.env.example
-# Port the backend server runs on
+```env
 PORT=4000
-
-# MongoDB connection string (replace with your own credentials and cluster info)
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/<db-name>?retryWrites=true&w=majority
-
-# Secret key for signing JWT tokens
-JWT_SECRET=<your_jwt_secret>
-
-# Token expiration time
+MONGO_URI=mongodb://localhost:27017/veegil-banking
+JWT_SECRET=change_me
 JWT_EXPIRATION=3600s
+FRONTEND_URL=http://localhost:5173
+```
 
-# Frontend URL (used for CORS and redirects)
-FRONTEND_URL=https://<your_frontend_url>
+Start backend:
 
+```bash
+npm run start:dev
+```
 
+GraphQL endpoint:
 
-frontend/.env.example
+- `http://localhost:4000/graphql`
+- Health check: `http://localhost:4000/health`
 
-# GraphQL API endpoint for the React frontend
-REACT_APP_GRAPHQL_API=https://<your_backend_url>/graphql
+### 2) Frontend
 
-===============================================================================================================
+```bash
+cd frontend
+npm install
+```
 
-🧪 Running Backend Tests
+Create `frontend/.env` (or `.env.local`) with:
 
+```env
+VITE_GRAPHQL_API=http://localhost:4000/graphql
+```
+
+Start frontend:
+
+```bash
+npm start
+```
+
+App URL:
+
+- `http://localhost:5173` (Vite default)
+- If `5173` is in use, Vite automatically picks the next free port (for example `5174`)
+
+## Demo Credentials
+
+Seeded test user:
+
+- Phone Number: `07070707070`
+- Password: `707070`
+
+## Testing
+
+Backend:
+
+```bash
 cd backend
+npm test
 npm run test:cov
-Sample output:
+```
 
-All files                     |   74.24 |       96 |   46.34 |   73.52 |
-Test Suites: 5 passed, 5 total  
-Tests:       51 passed, 51 total  
-Test coverage is above the required 70%.
+Frontend:
 
-===============================================================================================================
+```bash
+cd frontend
+npm test
+```
 
-🔍 Sample GraphQL Queries
-🔑 Login
+## CI Pipeline
 
+A GitHub Actions workflow is included at `.github/workflows/ci.yml` and runs:
+
+- backend tests and build
+- frontend tests and build
+
+This gives recruiters a quick signal that the codebase is maintained and verifiable.
+
+## Containerized Deployment
+
+Docker support is included for backend, frontend, and MongoDB:
+
+- `backend/Dockerfile`
+- `frontend/Dockerfile`
+- `docker-compose.yml`
+
+Run with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+Services:
+
+- Frontend: `http://localhost:3000`
+- Backend GraphQL: `http://localhost:4000/graphql`
+- Backend health check: `http://localhost:4000/health`
+
+## Production Readiness Notes
+
+- GraphQL Playground and introspection are disabled when `NODE_ENV=production`
+- Backend request validation is globally enabled (`whitelist`, `transform`, `forbidNonWhitelisted`)
+- Backend security headers are enabled with `helmet`
+- Backend HTTP request logging is enabled with `morgan`
+- Environment templates are included in `backend/.env.example` and `frontend/.env.example`
+
+## API Quick Examples
+
+Login mutation:
+
+```graphql
 mutation {
-  login(input: {
-    phoneNumber: "07066623544",
-    password: "securePass123"
-  }) {
+  login(input: { phoneNumber: "07070707070", password: "707070" }) {
     token
     user {
       _id
@@ -136,12 +156,11 @@ mutation {
     }
   }
 }
+```
 
+Authenticated user query:
 
-🧍‍♂️ whoAmI (Authenticated)
-Set header:
-Authorization: Bearer <your_token_here>
-
+```graphql
 query {
   whoAmI {
     _id
@@ -150,148 +169,20 @@ query {
     balance
   }
 }
+```
 
+Use header:
 
-=========================================================================================================================
-🧱 Tech Stack
-Backend
+```text
+Authorization: Bearer <token>
+```
 
-NestJS (Node.js)
+## Portfolio Notes
 
-GraphQL (Apollo Server)
+- Built and maintained by Fatai Sunmonu
+- Focus areas: backend correctness, clear architecture, and practical UX
+- Open to remote full-stack opportunities
 
-MongoDB + Mongoose
+## License
 
-Passport.js + JWT
-
-Frontend
-
-React
-
-Apollo Client
-
-Tailwind CSS (optional)
-
-===============================================================================================================
-
-✨ Features
-
-🔐 JWT-based Authentication
-
-📱 Phone Number = Account Number
-
-💸 Deposit and Withdraw Funds
-
-🧾 Transaction History
-
-💰 Real-Time Balance Display
-
-📊 Seeded Data for Evaluation
-
-🧪 70%+ Test Coverage (Jest)
-
-===============================================================================================================
-
-📁 Final Project Structure
-
-veegil-banking-app/
-├── backend/
-│   ├── src/
-│   │   ├── auth/
-│   │   ├── user/
-│   │   ├── transaction/
-│   │   ├── app.controller.ts
-│   │   ├── app.controller.spec.ts
-│   │   ├── app.module.ts
-│   │   ├── app.service.ts
-│   │   ├── schema.graphql
-│   │   └── main.ts
-│   ├── test/
-│   ├── coverage/
-│   ├── dist/
-│   ├── seed.ts
-│   ├── nest-cli.json
-│   ├── tsconfig.build.json
-│   ├── tsconfig.json
-│   ├── .gitignore
-│   ├── .prettierrc
-│   ├── eslint.config.mjs
-│   ├── package.json
-│   ├── package-lock.json
-│   └── README.md
-│
-├── frontend/
-│   ├── src/
-│   │   ├── apollo/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── graphql/
-│   │   ├── apolloClient.ts
-│   │   ├── App.tsx
-│   │   ├── App.css
-│   │   ├── App.test.tsx
-│   │   ├── index.tsx
-│   │   ├── index.css
-│   │   ├── logo.svg
-│   │   ├── react-app-env.d.ts
-│   │   ├── reportWebVitals.ts
-│   │   └── setupTests.ts
-│   ├── public/
-│   ├── build/
-│   ├── build.json
-│   ├── .gitignore
-│   ├── tsconfig.json
-│   ├── package.json
-│   ├── package-lock.json
-│   └── README.md
-│
-├── LICENSE
-├── .gitignore
-└── README.md
-
-===============================================================================================================
-
-🧠 Developer Notes
-Use GqlAuthGuard to secure routes
-
-Always round amounts: Math.round(amount * 100) / 100
-
-Use GraphQL Playground or Postman for manual testing
-
-Do NOT expose passwords in any API response
-
-
-==========================================================================================================================
-📝 Additional Notes
-The app has been tested on multiple devices to ensure functionality and accessibility
-
-GraphQL Playground requires Bearer token in header for authenticated queries
-
-
-==========================================================================================================================
-📬 Submission Checklist
- Added hr@veegil.com as a developer on the private GitLab repo (not via a group)
-
- Included this README.md in the root of the parent folder
-
- Included login credentials (see above)
-
- Included link to hosted Heroku app (see above)
-
- Hosted app tested on a second device (outside dev machine)
-
- Code organized into backend and frontend folders inside one parent project folder
-
-===============================================================================================================
-
-👨‍💻 Author
-
-**Fatai Sunmonu**  
-- GitHub: [@FAS2024](https://github.com/FAS2024)  
-- LinkedIn: [https://linkedin.com/in/fatai-sunmonu](https://linkedin.com/in/fatai-sunmonu)
-
-
-===============================================================================================================
-
-📄 License
-This project is licensed under the MIT License.
+MIT

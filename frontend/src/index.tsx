@@ -2,15 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { AuthProvider } from './context/AuthContext';
 
 // GraphQL endpoint
+const graphqlApi =
+  import.meta.env.VITE_GRAPHQL_API || 'http://localhost:4000/graphql';
+
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_API || 'http://localhost:3000/graphql',
+  uri: graphqlApi,
 });
 
 // Set auth header with JWT token
@@ -42,5 +44,3 @@ root.render(
     </ApolloProvider>
   </React.StrictMode>
 );
-
-reportWebVitals();

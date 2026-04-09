@@ -1,0 +1,38 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: veegil-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+    container_name: veegil-backend
+    depends_on:
+      - mongo
+    environment:
+      PORT: 4000
+      MONGO_URI: mongodb://mongo:27017/veegil-banking
+      JWT_SECRET: change_me_in_production
+      JWT_EXPIRATION: 3600s
+      FRONTEND_URL: http://localhost:3000
+      NODE_ENV: production
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_GRAPHQL_API: http://localhost:4000/graphql
+    container_name: veegil-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongo_data:
